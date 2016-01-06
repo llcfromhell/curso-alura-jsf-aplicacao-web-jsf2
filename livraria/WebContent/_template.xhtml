@@ -1,0 +1,47 @@
+<html xmlns="http://www.w3.org/1999/xhtml"
+        xmlns:h="http://java.sun.com/jsf/html"
+        xmlns:f="http://java.sun.com/jsf/core"
+        xmlns:ui="http://java.sun.com/jsf/facelets"
+        xmlns:p="http://primefaces.org/ui"> 
+
+    <h:head/>
+
+    <h:body>
+    
+    	<div style="float:right">
+    	<h:form>
+            <p:themeSwitcher value="#{temaBean.tema}" style="position: absolute; right: 10px;">
+                <f:selectItems value="#{temaBean.temas}" />
+                 <f:ajax/>
+            </p:themeSwitcher>
+        </h:form>
+    	</div>
+    
+    	<div id="cabecalho"> 
+          <h:graphicImage library="img" name="logo.png"/>
+          <h:form>
+	          <p:menubar>
+	          	<p:submenu label="Cadastros">
+	          		<p:menuitem value="Livro" action="livro?faces-redirect=true" />
+	          		<p:menuitem value="Autor" action="autor?faces-redirect=true" />
+	          	</p:submenu>
+	          </p:menubar>
+          </h:form>
+          
+          <h1>
+       		<ui:insert name="titulo"/>
+          </h1>          
+        </div>
+
+        <div id="conteudo">
+        	<ui:insert name="conteudo" />
+        </div>
+        
+        <div id="rodape">
+		  copyright 2012
+		  <ui:insert name="texto">
+		  </ui:insert>
+		</div>
+        
+    </h:body>
+</html>

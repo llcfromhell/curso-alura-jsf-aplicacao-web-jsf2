@@ -1,0 +1,140 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:h="http://java.sun.com/jsf/html"
+	xmlns:f="http://java.sun.com/jsf/core"
+	xmlns:ui="http://java.sun.com/jsf/facelets"
+	xmlns:p="http://primefaces.org/ui">
+
+	<ui:composition template="_template.xhtml">
+	
+		<ui:define name="titulo">
+			<h1>Novo Livro</h1>
+		</ui:define>
+	
+		<ui:define name="conteudo">
+	
+			<h:form>
+			
+			<p:growl id="messages" autoUpdate="true"/>
+			
+				<p:fieldset legend="Dados do Livro">
+					<h:panelGrid columns="2">
+	
+						<p:outputLabel value="Titulo:" for="titulo" />
+						<p:inputText 
+							id="titulo" 
+							required="true" 
+							requiredMessage="Título requerido" 
+							value="#{livroBean.livro.titulo}"
+							validatorMessage="Máximo 40 caracteres">
+							
+							<f:validateLength maximum="40"></f:validateLength>
+							
+							<f:ajax event="blur"/>
+								
+						</p:inputText>
+							
+	
+						<p:outputLabel value="ISBN:" for="isbn" />
+						<p:inputMask 
+							id="isbn"
+							mask="999-9-99-999999-9" 
+							value="#{livroBean.livro.isbn}" 
+							validator="#{livroBean.comecaComDigitoUm}">
+							<f:ajax execute="@this" />
+						</p:inputMask>
+	
+						<p:outputLabel value="Preço:" for="preco" />
+						<p:inputText id="preco" value="#{livroBean.livro.preco}">
+							<f:validateDoubleRange minimum="1.00" maximum="1000.00"></f:validateDoubleRange>
+						</p:inputText>
+	
+						<p:outputLabel value="Data de Lançamento:" for="dataLancamento" />
+						<p:calendar 
+							id="dataLancamento"
+							value="#{livroBean.livro.dataLancamento.time}"
+							converterMessage="not a date"
+							
+							pattern="dd/MM/yyyy"
+							timeZone="America/Sao_Paulo">
+							
+						</p:calendar>
+	
+					</h:panelGrid>
+				</p:fieldset>
+		
+				<hr />
+		
+				<p:fieldset legend="Dados do Autor">
+				
+					<p:commandLink value="Cadastrar novo autor" action="autor?faces-redirect=true" immediate="true"/>
+					
+					<h:panelGrid columns="3">
+	
+						<p:outputLabel value="Autor:" />
+						<p:selectOneMenu 
+							value="#{livroBean.autorId}"
+							id="autor">
+							<f:selectItems
+								value="#{livroBean.autores}"
+								itemValue="#{autor.id}"
+								itemLabel="#{autor.nome}"
+								var="autor" />
+						</p:selectOneMenu>
+						
+						<p:commandButton 
+							action="#{livroBean.adicionarAutor}"
+							value="Adiciona Autor"
+							process="@this autor"
+							update="tabela">
+							
+						</p:commandButton>
+		
+						
+					</h:panelGrid>
+					
+					<p:dataTable value="#{livroBean.autoresDoLivro}" var="autor" id="tabela" emptyMessage="Nenhum autor associado">
+						<p:column>
+							<h:outputText value="#{autor.nome}" />
+						</p:column>
+					</p:dataTable>
+					
+					
+				</p:fieldset>
+		
+				<p:commandButton style="margin: 5px;" value="Gravar" action="#{livroBean.gravar}" update="@form :tabelaLivro" process="@form">
+					
+				</p:commandButton>
+				
+			</h:form>
+		
+			<hr />
+		
+			<p:dataTable paginatorAlwaysVisible="true" rows="5" paginator="true" paginatorPosition="bottom" value="#{livroBean.livros}" var="livro" id="tabelaLivro">
+				<p:column>
+					<f:facet name="header">Titulo</f:facet>
+					<h:outputText value="#{livro.titulo}" />
+				</p:column>
+				<p:column>
+					<f:facet name="header">Preço</f:facet>
+					<h:outputText value="#{livro.preco}" />
+				</p:column>
+				<p:column>
+					<f:facet name="header">Data</f:facet>
+					<h:outputText value="#{livro.dataLancamento.time}" >
+						<f:convertDateTime pattern="dd/MM/yyyy" timeZone="America/Sao_Paulo"></f:convertDateTime>
+					</h:outputText>
+				</p:column>
+			</p:dataTable>
+			
+		</ui:define>
+		
+		<ui:define name="texto">
+  			Cadastro de Livros
+		</ui:define>
+		
+	
+	</ui:composition>
+
+</html>
